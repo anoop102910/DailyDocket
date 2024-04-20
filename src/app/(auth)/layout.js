@@ -10,6 +10,6 @@ export default async function Layout({ children }) {
   const session = await getServerSession();
 
   return (
-      <div>{children}</div>
+      <div className="p-2">{children}</div>
   );
 }
