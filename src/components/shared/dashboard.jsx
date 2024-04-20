@@ -40,7 +40,7 @@ function Dashboard({ className }) {
     <aside
       aria-label="sidebar "
       aria-controls="default-sidebar"
-      className={`${className} bg-white font-urbanist   w-[290px] px-6 shadow-md rounded-md transition-transform -translate-x-full sm:translate-x-0`}
+      className={`${className} bg-white font-urbanist min-w-max px-6 shadow-md rounded-md `}
     >
       <div className="pt-10 hover:text-slate-100 text-slate-600">
         <a className="flex mb-4 items-center px-4 py-3 rounded-xl text-slate-700 hover:bg-main hover:text-white transition duration-150 cursor-pointer">

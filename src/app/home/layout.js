@@ -14,7 +14,7 @@ export default async function Layout({ children }) {
 
   return (
         <div className="bg-slate-100 relative flex min-h-screen ">
-          <Dashboard className="sticky top-0 left-0  max-md:hidden " />
+          <Dashboard className="sticky top-0 left-0 bottom-0  max-lg:hidden " />
           <div className="w-full md:ml-2 mt-1 relative">
             <Navbar />
             <div className="p-4">{children}</div>
