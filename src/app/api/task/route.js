@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import joi from "joi";
 import Task from "@/models/task.model";
 import { connect } from "@/utils/db";
+import { revalidatePath, revalidateTag } from "next/cache";
 
 // Define Joi schema for validation
 const taskSchema = joi.object({
@@ -20,7 +21,6 @@ const taskSchema = joi.object({
   createdBy: joi.string().required(),
 });
 
-
 // POST request to create a new task
 export const POST = async request => {
   const body = await request.json();
@@ -34,6 +34,8 @@ export const POST = async request => {
     connect();
     const newTask = await new Task(value);
     const response = await newTask.save();
+    revalidatePath("/home");
+    revalidateTag("tasks");
     return new NextResponse(JSON.stringify(response), { status: 200 });
   } catch (error) {
     console.log(error);

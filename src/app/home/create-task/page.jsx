@@ -1,4 +1,5 @@
 "use client";
+import LoadingButton from "@/components/shared/loadbtn";
 import { format } from "date-fns";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
@@ -112,13 +113,7 @@ function CreateTask() {
               <DayPicker mode="single" selected={selected} onSelect={setSelected} footer={footer} />
             </div>
           </div>
-          <button
-            type="submit"
-            className="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg  px-5 py-2.5 text-center"
-            disabled={loading}
-          >
-            {loading ? "Loading..." : "Create a new todo"}
-          </button>
+        <LoadingButton loading={loading} type="submit" >Create a new Task</LoadingButton>
         </form>
       </div>
     </div>

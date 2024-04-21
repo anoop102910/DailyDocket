@@ -5,6 +5,7 @@ import React from "react";
 
 async function Page() {
   const session = await getServerSession();
+
   const user = await fetchUserByEmail(session.user.email);
 
   const totalTasks = await fetchTasksCount({ userId: user._id });
@@ -20,7 +21,6 @@ async function Page() {
   });
   const lowPriorityTasks = await fetchTasksCount({ userId: user._id, priority: "Low" });
 
-  if (!session) redirect("/auth/signin");
   return (
     <div>
       <div className="task-count flex justify-around flex-wrap gap-6 flex-1">

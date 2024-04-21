@@ -2,6 +2,7 @@ import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import User from "@/models/user.model";
+import { connect } from "@/utils/db";
 
 const handler = NextAuth({
   providers: [
@@ -10,23 +11,22 @@ const handler = NextAuth({
       name: "Credentials",
       async authorize(credentials) {
         try {
-          const user = await User.findOne({ email: credentials.email });
+          connect();
 
-          if (user) {
-            const isPasswordCorrect = await bcrypt.compare(credentials.password, user.password);
-            if (isPasswordCorrect) {
-              return {
-                id: user._id,
-                name: user.name,
-                email: user.email,
-                image: user.image,
-              };
-            } else {
-              throw new Error("Wrong Credentials!");
-            }
-          } else {
-            throw new Error("User not found!");
-          }
+          const user = await User.findOne({ email: credentials.email });
+          console.log(user);
+          if (!user) throw new Error("User not found");
+
+          const isPasswordCorrect = await bcrypt.compare(credentials.password, user.password);
+          console.log(isPasswordCorrect)
+          if (!isPasswordCorrect) throw new Error("Wrong Credentials!");
+
+          return {
+            id: user._id,
+            name: user.name,
+            email: user.email,
+            image: user.image,
+          };
         } catch (err) {
           throw new Error(err);
         }
@@ -34,18 +34,17 @@ const handler = NextAuth({
     }),
   ],
   pages: {
-    error: "/dashboard/login",
+    signIn: "/auth/signin",
+    error: "/error",
   },
   callbacks: {
-    async jwt({ token, session, user }) {
+    async jwt({ token, user }) {
       if (user) {
-        token.uid = user;
         token.id = user.id;
       }
-      token = { ...token, user: session };
       return token;
     },
-    async session({ session, token, user }) {
+    async session({ session, token }) {
       if (token) {
         session.user.id = token.id;
       }

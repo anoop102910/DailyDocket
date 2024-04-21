@@ -70,6 +70,7 @@ function CreateTask({ params }) {
   if (selected) {
     footer = <p>You picked {format(selected, "PP")}.</p>;
   }
+  
   return (
     <div className="flex justify-between items-center w-full ">
       <div className="w-full  mx-auto max-w-lg p-4  rounded-lg sm:p-6 ">

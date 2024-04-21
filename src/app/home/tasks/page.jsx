@@ -1,7 +1,7 @@
 import { fetchUserByEmail, fetchUserTask } from "@/lib/data";
-import TaskCard from "./TaskCard";
+import TaskCard from "./components/taskcard";
 import { getServerSession } from "next-auth";
-import Filter from "./filter";
+import Filter from "./components/filter";
 
 async function page({ searchParams }) {
   const status = searchParams.status;

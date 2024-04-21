@@ -1,14 +1,17 @@
 "use client";
+import LoadingButton from "@/components/shared/loadbtn";
+import { Icon } from "@iconify/react";
 import { signIn, useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
-
+import toast from "react-hot-toast";
 function LoginForm() {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
   const session = useSession();
 
@@ -24,9 +27,17 @@ function LoginForm() {
     }));
   };
 
-  const handleSubmit = event => {
+  const handleSubmit = async event => {
+    setLoading(true);
     event.preventDefault();
-    signIn("credentials", formData);
+    try {
+      const res = await signIn("credentials", { ...formData, redirect: false });
+      if (!res.ok) throw new Error(res.error);
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      toast.error(error.message);
+    }
   };
 
   if (session.status === "unauthenticated")
@@ -44,7 +55,7 @@ function LoginForm() {
                 name="email"
                 id="email"
                 className="bg-slate-500 border border-slate-300 text-slate-100 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 placeholder-slate-400"
-                placeholder="name@company.com"
+                placeholder="E.g. anoop@gmail.com"
                 value={formData.email}
                 onChange={handleChange}
                 required
@@ -58,7 +69,7 @@ function LoginForm() {
                 type="password"
                 name="password"
                 id="password"
-                placeholder="••••••••"
+                placeholder="E.g. welcome"
                 className="bg-slate-500 border border-slate-300 text-slate-100 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 placeholder-slate-400"
                 value={formData.password}
                 onChange={handleChange}
@@ -85,12 +96,9 @@ function LoginForm() {
                 Lost Password?
               </a>
             </div>
-            <button
-              type="submit"
-              className="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
-            >
-              Login to your account
-            </button>
+            <LoadingButton loading={loading} onClick={handleSubmit}>
+              Login to your Account
+            </LoadingButton>
             <div className="text-sm font-medium text-slate-200">
               Not registered?{" "}
               <Link href="/auth/signup" className="text-blue-700 hover:underline">
